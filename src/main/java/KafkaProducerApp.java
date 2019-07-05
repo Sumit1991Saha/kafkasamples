@@ -5,8 +5,6 @@ import java.util.Properties;
 
 public class KafkaProducerApp {
 
-    private static final String REPLICATED_TOPIC = "my_replicated_topic";
-
     public static void main(String[] args) {
 
         Properties properties = new Properties();
@@ -21,7 +19,9 @@ public class KafkaProducerApp {
 
         try {
             for (int i = 0; i < 150; ++i ) {
-                producerRecord = new ProducerRecord<String, String>(REPLICATED_TOPIC, Integer.toString(i), "MyMessage: " + i);
+                producerRecord =
+                        new ProducerRecord<String, String>(Topics.TOPIC_BOTH_REPLICATION_AND_PARTITION.getTopicName(),
+                                Integer.toString(i), "MyMessage: " + i);
                 myProducer.send(producerRecord);
             }
         } catch (Exception e) {
