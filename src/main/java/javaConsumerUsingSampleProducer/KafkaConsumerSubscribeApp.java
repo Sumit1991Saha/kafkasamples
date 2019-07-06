@@ -1,14 +1,14 @@
+package javaConsumerUsingSampleProducer;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.common.TopicPartition;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Properties;
 
-public class KafkaConsumerAssignApp {
+public class KafkaConsumerSubscribeApp {
 
     public static void main(String[] args) {
 
@@ -17,15 +17,12 @@ public class KafkaConsumerAssignApp {
         properties.put("bootstrap.servers", "localhost:9092, localhost:9093");
         properties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         properties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        properties.put("group.id", "test");
 
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(properties);
 
-        Collection<TopicPartition> partitions = new ArrayList<TopicPartition>() {{
-            add(new TopicPartition("my_topic1", 2));
-            add(new TopicPartition("my_topic2", 0));
-        }};
-
-        consumer.assign(partitions);
+        Collection<String> topics = Arrays.asList("my_topic1", "my_topic2");
+        consumer.subscribe(topics); //This step is not incremental so another such call will override the previous subscribe operation.
 
         try {
 
